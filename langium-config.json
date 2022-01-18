@@ -1,0 +1,21 @@
+{
+    "projectName": "Philyra",
+    "languages": [
+        {
+            "id": "philyra",
+            "grammar": "src/language/philyra.langium",
+            "fileExtensions": [
+                ".pyl"
+            ],
+            "textMate": {
+                "out": "syntaxes/philyra.tmLanguage.json"
+            }
+        }
+    ],
+    "out": "src/language/generated",
+    "chevrotainParserConfig": {
+        "recoveryEnabled": true,
+        "nodeLocationTracking": "full",
+        "maxLookahead": 3
+    }
+}

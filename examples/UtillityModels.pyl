@@ -1,0 +1,8 @@
+import types
+import io.second
+
+package io.utility {
+  entity UtilityEntity {
+    utlityField: SecondEntity
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "name": "philyra",
+  "scopeName": "source.philyra",
+  "fileTypes": [
+    ".pyl"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "keyword.control.philyra",
+      "match": "\\b(applicationConfig|dto|entity|from|id|import|index|is|package|to|type|wraps)\\b|\\B(\\[1\\.\\.n\\]|\\[m\\.\\.n\\])\\B"
+    },
+    {
+      "name": "string.quoted.double.philyra",
+      "begin": "\"",
+      "end": "\""
+    },
+    {
+      "name": "string.quoted.single.philyra",
+      "begin": "'",
+      "end": "'"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.philyra",
+          "begin": "/\\*",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.philyra"
+            }
+          },
+          "end": "\\*/",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.philyra"
+            }
+          }
+        },
+        {
+          "begin": "//",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.philyra"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.philyra"
+        }
+      ]
+    }
+  }
+}
