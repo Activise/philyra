@@ -1,6 +1,6 @@
 import { DefaultScopeComputation, LangiumDocument, AstNode, PrecomputedScopes, MultiMap, AstNodeDescription, interruptAndCheck, streamAllContents } from "langium";
 import { CancellationToken } from "vscode-languageserver";
-import { Model, Import, isEntity, isImport, isPackage, isType, Package } from "../generated/ast";
+import { Model, Import, isEntity, isImport, isPackage, isType, TypeToImport, Attribute } from "../generated/ast";
 import { PhilyraServices } from "../PhilyraModule";
 import { getMembersToExport, MemberToExport } from "../util/PhilyraAstUtils";
 import { PhilyraReferences } from "./PhilyraReferences";
@@ -19,60 +19,65 @@ export class PhilyraScopeComputation extends DefaultScopeComputation {
     document.precomputedScopes = scopes;
 
     await this.processImports(model, scopes, document, cancelToken);
-    await this.resolveMembers(model, scopes, document, cancelToken);
+    await this.computeMemberScopes(model, scopes, document, cancelToken);
 
-    // scopes.forEach((val, key) => {
-    //   console.log("Key: " + key.$path + " Val: " + val?.name);
-    // });
     return scopes;
+  }
+
+  addScopeToContainer(scopes: PrecomputedScopes, container: AstNode, target: AstNode, doccument: LangiumDocument) {
+    scopes.add(container, this.descriptions.createDescription(target, this.nameProvider.getName(target)!, doccument));
   }
 
   async processImports(model: Model, scopes: PrecomputedScopes, document: LangiumDocument, cancelToken: CancellationToken) {
     let imports = streamAllContents(model).filter(isImport).toArray();
     for (let imported of imports as Import[]) {
       interruptAndCheck(cancelToken);
-      let toImportsImports = this.references.findReferenced(Package, imported.toImport);
 
-      for (let toImport of toImportsImports) {
-        if (isPackage(toImport)) {
-          for (let type of getMembersToExport(toImport)) {
-            scopes.add(imported.$container, this.descriptions.createDescription(type, this.nameProvider.getName(type)!, document));
+      let imports = this.references.findReferenced(TypeToImport, imported.toImport);
+      for (let node of imports) {
+        if (isPackage(node)) {
+          for (let type of getMembersToExport(node)) {
+            this.addScopeToContainer(scopes, imported.$container, type, document);
           }
-        } else if (isType(toImport)) {
-          scopes.add(imported.$container, this.descriptions.createDescription(toImport, this.nameProvider.getName(toImport)!, document));
+        } else if (isType(node)) {
+          this.addScopeToContainer(scopes, imported.$container, node, document); 
         }
       }
     }
   }
 
-  async resolveMembers(model: Model, scopes: PrecomputedScopes, document: LangiumDocument, cancelToken: CancellationToken): Promise<void> {
+  async computeMemberScopes(model: Model, scopes: PrecomputedScopes, document: LangiumDocument, cancelToken: CancellationToken): Promise<void> {
     let members = getMembersToExport(model);
     for (let member of members) {
       interruptAndCheck(cancelToken);
-      scopes.add(member.$container, this.descriptions.createDescription(member, this.nameProvider.getName(member)!, document));
+      this.addScopeToContainer(scopes, member.$container, member, document);
     }
 
-    await this.resolveAttributes(members, scopes, document);
+    await this.computeAttributeScopes(members, scopes, document);
   }
 
-  async resolveAttributes(members: MemberToExport[], scopes: PrecomputedScopes, document: LangiumDocument): Promise<void> {
+  async computeAttributeScopes(members: MemberToExport[], scopes: PrecomputedScopes, document: LangiumDocument): Promise<void> {
     for (let member of members) {
       if (!isEntity(member)) {
         continue;
       }
-
 
       for (let attribute of member.attributes) {
         if (attribute.type == undefined) {
           continue;
         }
 
-        let attributeType = attribute.type.ref;
-        if (attributeType && isEntity(attributeType)) {
-          for (let targetAttribute of attributeType.attributes) {
-            scopes.add(attribute, this.descriptions.createDescription(targetAttribute, targetAttribute.name, document));
-          }
-        }
+        this.addScopeToContainer(scopes, member, attribute, document);
+        await this.computeAttributeOtherSideScope(attribute, scopes, document);
+      }
+    }
+  }
+
+  async computeAttributeOtherSideScope(attribute: Attribute, scopes: PrecomputedScopes, document: LangiumDocument): Promise<void> {
+    let attributeType = attribute.type.ref;
+    if (attributeType && isEntity(attributeType)) {
+      for (let targetAttribute of attributeType.attributes) {
+        this.addScopeToContainer(scopes, attribute, targetAttribute, document);
       }
     }
   }
