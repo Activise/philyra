@@ -1,0 +1,8 @@
+applicationConfig {
+  name: "MyLibrary"
+  language: "java" {
+    framework: "quarkus-native" {
+      database: "mongodb"
+    }
+  }
+}

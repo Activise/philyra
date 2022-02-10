@@ -1,0 +1,14 @@
+package io.activise.phylira.types {
+  type String {
+    "java" to "java.lang.String"
+  }
+  type BigDecimal {
+    "java" to "java.math.BigDecimal"
+  }
+  type Integer {
+    "java" to "java.lang.Integer"
+  }
+  type Double {
+    "java" to "java.lang.Double"
+  }
+}

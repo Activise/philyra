@@ -1,0 +1,53 @@
+import io.activise.phylira.types
+
+package example.library {
+  entity Rentable(rentables) -> multi {
+    id [id]: String
+    index code: String
+    index name: String
+    authors: Author[]
+  }
+
+  entity Book(books) is Rentable {
+    index isbn: String
+  }
+
+  entity Movie(movies) is Rentable {
+    length: BigDecimal
+  }
+
+  entity SongCD(cds) is Rentable {
+    songs: Song[]
+  }
+
+  entity Song(songs) {
+    index name: String
+    cd: SongCD
+  }
+
+  entity Author(authors) {
+    combined index firstname, lastname
+
+    id [id]: String
+    index firstname: String
+    index lastname: String
+    rentables: Rentable[] from authors
+  }
+
+  splitted port in OrderPort {
+    order(): String
+    cancelOrder(): String
+  }
+
+  port out IMDB {
+    findByName(name: String): ImdbMovie[]
+  }
+
+  dto ImdbMovie {
+    name: String[]
+  }
+
+  repository for Book, Movie, SongCD, Song, Author
+  // repository for all
+  crud for Book, Movie, SongCD, Song, Author
+}
