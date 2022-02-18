@@ -1,5 +1,5 @@
 import { AstNodeDescription, CstNode, getDocument, Stream, streamCst, ValidationAcceptor, ValidationCheck, ValidationRegistry } from 'langium';
-import { PhilyraAstType, Model, isApplicationConfig, ApplicationConfig, isModel, Type, ApplicationConfigProperty, CombinedIndex, isPackage } from '../generated/ast';
+import { PhilyraAstType, Model, isApplicationConfig, ApplicationConfig, isModel, Type, ApplicationConfigProperty, CombinedIndex, isPackage, Attribute, isEntity, isDto } from '../generated/ast';
 import { PhilyraServices } from '../PhilyraModule';
 import { isNamed, PhilyraNameProvider } from '../references/PhilyraNameProvider';
 
@@ -15,7 +15,8 @@ export class PhilyraValidationRegistry extends ValidationRegistry {
       ApplicationConfig: validator.modelParentForConfig,
       ApplicationConfigProperty: validator.checkForApplicationPropertyValue,
       Type: validator.checkForDuplicateTypeNames,
-      CombinedIndex: validator.multipleIndicesRequired
+      CombinedIndex: validator.multipleIndicesRequired,
+      Attribute: validator.validateAttribute
     };
     this.register(checks, validator);
   }
@@ -79,6 +80,22 @@ export class PhilyraValidator {
   checkForApplicationPropertyValue(property: ApplicationConfigProperty, accept: ValidationAcceptor): void {
     if (property.value == undefined && property.subProperties.length == 0) {
       accept('warning', 'The config property has no value.', { node: property });
+    }
+  }
+
+  validateAttribute(attribute: Attribute, accept: ValidationAcceptor): void {
+    let type = attribute.type.ref;
+    let isEntityOrDto = isEntity(type) || isDto(type);
+    if (attribute.isIndex && isEntityOrDto) {
+      accept('error', "Can't index DTOs or Entities.", { node: attribute });
+    }
+
+    if (attribute.isId && isEntityOrDto) {
+      accept('error', "Can't have DTOs or Entities as id.", { node: attribute });
+    }
+
+    if (attribute.isId && attribute.isArray) {
+      accept('error', "The id can't be an array", { node: attribute });
     }
   }
 }

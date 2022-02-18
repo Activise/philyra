@@ -44,7 +44,7 @@ export class PhilyraScopeProvider extends DefaultScopeProvider {
   getScope(node: AstNode, referenceId: PhilyraAstReference): Scope {
       let result = super.getScope(node, referenceId);
       
-      if (isAttribute(node) && referenceId == 'Attribute:otherSide') {
+      if (referenceId == 'Attribute:otherSide') {
         return new FilteredScope(result, node, attributeScopeFilter);
       } else if (isCrud(node) || isRepository(node)) {
         return new FilteredScope(result, node, undefined, true);
