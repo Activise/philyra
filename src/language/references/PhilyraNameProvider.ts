@@ -1,5 +1,13 @@
-import { DefaultNameProvider, AstNode, isNamed } from "langium";
+import { DefaultNameProvider, AstNode, NamedAstNode } from "langium";
 import { isPackage, isModel } from "../generated/ast";
+
+export function isNamed(node: AstNode | any | undefined): node is NamedAstNode {
+  if (node == undefined) {
+    return false;
+  }
+
+  return (node as NamedAstNode).name !== undefined;
+}
 
 export class PhilyraNameProvider extends DefaultNameProvider {
   getName(node: AstNode): string | undefined {

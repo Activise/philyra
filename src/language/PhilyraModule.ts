@@ -1,5 +1,6 @@
 import { createDefaultModule, createDefaultSharedModule, DefaultSharedModuleContext, inject, LangiumServices, LangiumSharedServices, Module, PartialLangiumServices } from 'langium';
 import { PhilyraGeneratedModule, PhilyraGeneratedSharedModule } from './generated/module';
+import { PhilyraSemanticTokenProvider } from './highlighting/PhilyraSemanticTokenProvider';
 import { PhilyraAstNodeDescriptionProvider } from './index/PhilyraAstNodeDescriptionProvider';
 import { PhilyraLinker } from './references/PhilyraLinker';
 import { PhilyraNameProvider } from './references/PhilyraNameProvider';
@@ -22,7 +23,7 @@ export type PhilyraServices = LangiumServices & PhilyraAddedServices
 export const PhilyraModule: Module<PhilyraServices, PartialLangiumServices & PhilyraAddedServices> = {
   validation: {
     ValidationRegistry: (injector) => new PhilyraValidationRegistry(injector),
-    PhilyraValidator: () => new PhilyraValidator()
+    PhilyraValidator: (injector) => new PhilyraValidator(injector)
   },
   index: {
     AstNodeDescriptionProvider: (injector) => new PhilyraAstNodeDescriptionProvider(injector)
@@ -33,6 +34,9 @@ export const PhilyraModule: Module<PhilyraServices, PartialLangiumServices & Phi
     ScopeProvider: (injector) => new PhilyraScopeProvider(injector),
     Linker: (injector) => new PhilyraLinker(injector),
     CustomReferences: (injector) => new PhilyraReferences(injector)
+  },
+  lsp: {
+    SemanticTokenProvider: () => new PhilyraSemanticTokenProvider()
   }
 };
 

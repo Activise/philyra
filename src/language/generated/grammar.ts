@@ -67,169 +67,6 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
     {
       "$type": "ParserRule",
       "parameters": [],
-      "name": "Package",
-      "hiddenTokens": [],
-      "alternatives": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Keyword",
-            "value": "package",
-            "elements": []
-          },
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refText": "QualifiedName"
-              }
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": "{"
-          },
-          {
-            "$type": "Alternatives",
-            "elements": [
-              {
-                "$type": "Assignment",
-                "feature": "imports",
-                "operator": "+=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "arguments": [],
-                  "rule": {
-                    "$refText": "Import"
-                  }
-                },
-                "elements": []
-              },
-              {
-                "$type": "Assignment",
-                "feature": "types",
-                "operator": "+=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "arguments": [],
-                  "rule": {
-                    "$refText": "ExternalType"
-                  }
-                },
-                "elements": []
-              },
-              {
-                "$type": "Assignment",
-                "feature": "entities",
-                "operator": "+=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "arguments": [],
-                  "rule": {
-                    "$refText": "Entity"
-                  }
-                },
-                "elements": []
-              },
-              {
-                "$type": "Assignment",
-                "feature": "dtos",
-                "operator": "+=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "arguments": [],
-                  "rule": {
-                    "$refText": "Dto"
-                  }
-                },
-                "elements": []
-              }
-            ],
-            "cardinality": "*"
-          },
-          {
-            "$type": "Keyword",
-            "value": "}"
-          }
-        ]
-      }
-    },
-    {
-      "$type": "ParserRule",
-      "parameters": [],
-      "name": "Import",
-      "hiddenTokens": [],
-      "alternatives": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Keyword",
-            "value": "import",
-            "elements": []
-          },
-          {
-            "$type": "Assignment",
-            "feature": "toImport",
-            "operator": "=",
-            "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$refText": "TypeToImport"
-              },
-              "terminal": {
-                "$type": "RuleCall",
-                "arguments": [],
-                "rule": {
-                  "$refText": "QualifiedName"
-                }
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "$type": "ParserRule",
-      "parameters": [],
-      "name": "TypeToImport",
-      "hiddenTokens": [],
-      "alternatives": {
-        "$type": "Alternatives",
-        "elements": [
-          {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "Entity"
-            },
-            "elements": []
-          },
-          {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "ExternalType"
-            },
-            "elements": []
-          },
-          {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "Package"
-            },
-            "elements": []
-          }
-        ]
-      }
-    },
-    {
-      "$type": "ParserRule",
-      "parameters": [],
       "name": "ApplicationConfig",
       "hiddenTokens": [],
       "alternatives": {
@@ -349,6 +186,537 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
     {
       "$type": "ParserRule",
       "parameters": [],
+      "name": "Import",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "import",
+            "elements": []
+          },
+          {
+            "$type": "Assignment",
+            "feature": "toImport",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$refText": "TypeToImport"
+              },
+              "terminal": {
+                "$type": "RuleCall",
+                "arguments": [],
+                "rule": {
+                  "$refText": "QualifiedName"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "TypeToImport",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "Entity"
+            },
+            "elements": []
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "ExternalType"
+            },
+            "elements": []
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "Dto"
+            },
+            "elements": []
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "Package"
+            },
+            "elements": []
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "Package",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "package",
+            "elements": []
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "QualifiedName"
+              }
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "{"
+          },
+          {
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "repository",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Repository"
+                  }
+                },
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "crud",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Crud"
+                  }
+                },
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "imports",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Import"
+                  }
+                },
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "types",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "ExternalType"
+                  }
+                },
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "entities",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Entity"
+                  }
+                },
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "dtos",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Dto"
+                  }
+                },
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "ports",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Port"
+                  }
+                },
+                "elements": []
+              }
+            ],
+            "cardinality": "*"
+          },
+          {
+            "$type": "Keyword",
+            "value": "}"
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "Type",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "Entity"
+            },
+            "elements": []
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "ExternalType"
+            },
+            "elements": []
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "Dto"
+            },
+            "elements": []
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "TypeDefinition",
+      "hiddenTokens": [],
+      "fragment": true,
+      "alternatives": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": "[",
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "type",
+                "operator": "=",
+                "terminal": {
+                  "$type": "CrossReference",
+                  "type": {
+                    "$refText": "Type"
+                  },
+                  "terminal": {
+                    "$type": "RuleCall",
+                    "arguments": [],
+                    "rule": {
+                      "$refText": "QualifiedName"
+                    }
+                  }
+                }
+              },
+              {
+                "$type": "Assignment",
+                "feature": "isArray",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "]"
+                }
+              }
+            ]
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "type",
+                "operator": "=",
+                "terminal": {
+                  "$type": "CrossReference",
+                  "type": {
+                    "$refText": "Type"
+                  },
+                  "terminal": {
+                    "$type": "RuleCall",
+                    "arguments": [],
+                    "rule": {
+                      "$refText": "QualifiedName"
+                    }
+                  }
+                },
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "isArray",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "[]"
+                },
+                "cardinality": "?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "Port",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "isSplitted",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "splitted"
+            },
+            "cardinality": "?",
+            "elements": []
+          },
+          {
+            "$type": "Keyword",
+            "value": "port"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "type",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "PortType"
+              }
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "ID"
+              }
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "{"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "methods",
+            "operator": "+=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "MethodDefinition"
+              }
+            },
+            "cardinality": "*"
+          },
+          {
+            "$type": "Keyword",
+            "value": "}"
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "PortType",
+      "hiddenTokens": [],
+      "type": "string",
+      "alternatives": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "in",
+            "elements": []
+          },
+          {
+            "$type": "Keyword",
+            "value": "out",
+            "elements": []
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "MethodDefinition",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "NameWithKeyword"
+            },
+            "elements": []
+          },
+          {
+            "$type": "Keyword",
+            "value": "("
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "parameters",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "MethodParameter"
+                  }
+                },
+                "cardinality": "*",
+                "elements": []
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": ",",
+                    "elements": []
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "parameters",
+                    "operator": "+=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "arguments": [],
+                      "rule": {
+                        "$refText": "MethodParameter"
+                      }
+                    }
+                  }
+                ],
+                "cardinality": "*"
+              }
+            ]
+          },
+          {
+            "$type": "Keyword",
+            "value": ")"
+          },
+          {
+            "$type": "Keyword",
+            "value": ":"
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "TypeDefinition"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "MethodParameter",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "NameWithKeyword"
+            },
+            "elements": []
+          },
+          {
+            "$type": "Keyword",
+            "value": ":"
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "TypeDefinition"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
       "name": "Entity",
       "hiddenTokens": [],
       "alternatives": {
@@ -360,15 +728,10 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "elements": []
           },
           {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refText": "IDWithKeword"
-              }
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "NameWithKeyword"
             }
           },
           {
@@ -428,25 +791,142 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "cardinality": "?"
           },
           {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": "->",
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "inheritance",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "InheritanceMode"
+                  }
+                }
+              }
+            ],
+            "cardinality": "?"
+          },
+          {
             "$type": "Keyword",
             "value": "{"
+          },
+          {
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "combinedIndices",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "CombinedIndex"
+                  }
+                },
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "attributes",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Attribute"
+                  }
+                },
+                "elements": []
+              }
+            ],
+            "cardinality": "*"
+          },
+          {
+            "$type": "Keyword",
+            "value": "}"
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "InheritanceMode",
+      "hiddenTokens": [],
+      "type": "string",
+      "alternatives": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "single",
+            "elements": []
+          },
+          {
+            "$type": "Keyword",
+            "value": "multi",
+            "elements": []
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "CombinedIndex",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "combined",
+            "elements": []
+          },
+          {
+            "$type": "Keyword",
+            "value": "index"
           },
           {
             "$type": "Assignment",
             "feature": "attributes",
             "operator": "+=",
             "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
+              "$type": "CrossReference",
+              "type": {
                 "$refText": "Attribute"
               }
-            },
-            "cardinality": "*"
+            }
           },
           {
-            "$type": "Keyword",
-            "value": "}"
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": ",",
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "attributes",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "CrossReference",
+                  "type": {
+                    "$refText": "Attribute"
+                  }
+                }
+              }
+            ],
+            "cardinality": "*"
           }
         ]
       }
@@ -468,15 +948,10 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "elements": []
           },
           {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refText": "IDWithKeword"
-              }
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "NameWithKeyword"
             }
           },
           {
@@ -587,26 +1062,180 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
     {
       "$type": "ParserRule",
       "parameters": [],
-      "name": "RelationType",
+      "name": "Modifiers",
       "hiddenTokens": [],
-      "type": "string",
+      "fragment": true,
       "alternatives": {
         "$type": "Alternatives",
         "elements": [
           {
+            "$type": "Assignment",
+            "feature": "isId",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "id"
+            },
+            "elements": []
+          },
+          {
+            "$type": "Assignment",
+            "feature": "isIndex",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "index"
+            },
+            "elements": []
+          }
+        ],
+        "cardinality": "*"
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "Repository",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Group",
+        "elements": [
+          {
             "$type": "Keyword",
-            "value": "[1..n]",
+            "value": "repository",
             "elements": []
           },
           {
             "$type": "Keyword",
-            "value": "[m..n]",
+            "value": "for"
+          },
+          {
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "forAll",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "all"
+                },
+                "elements": []
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Assignment",
+                    "feature": "entities",
+                    "operator": "+=",
+                    "terminal": {
+                      "$type": "CrossReference",
+                      "type": {
+                        "$refText": "Entity"
+                      }
+                    },
+                    "elements": []
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "Keyword",
+                        "value": ",",
+                        "elements": []
+                      },
+                      {
+                        "$type": "Assignment",
+                        "feature": "entities",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "CrossReference",
+                          "type": {
+                            "$refText": "Entity"
+                          }
+                        }
+                      }
+                    ],
+                    "cardinality": "*"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "Crud",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "crud",
             "elements": []
           },
           {
             "$type": "Keyword",
-            "value": "1..1",
-            "elements": []
+            "value": "for"
+          },
+          {
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "forAll",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "all"
+                },
+                "elements": []
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Assignment",
+                    "feature": "entities",
+                    "operator": "+=",
+                    "terminal": {
+                      "$type": "CrossReference",
+                      "type": {
+                        "$refText": "Entity"
+                      }
+                    },
+                    "elements": []
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "Keyword",
+                        "value": ",",
+                        "elements": []
+                      },
+                      {
+                        "$type": "Assignment",
+                        "feature": "entities",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "CrossReference",
+                          "type": {
+                            "$refText": "Entity"
+                          }
+                        }
+                      }
+                    ],
+                    "cardinality": "*"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
@@ -625,15 +1254,10 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "elements": []
           },
           {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refText": "ID"
-              }
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "NameWithKeyword"
             }
           },
           {
@@ -698,15 +1322,10 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
         "$type": "Group",
         "elements": [
           {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refText": "IDWithKeword"
-              }
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "NameWithKeyword"
             },
             "elements": []
           },
@@ -715,21 +1334,10 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "value": ":"
           },
           {
-            "$type": "Assignment",
-            "feature": "type",
-            "operator": "=",
-            "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$refText": "Type"
-              },
-              "terminal": {
-                "$type": "RuleCall",
-                "arguments": [],
-                "rule": {
-                  "$refText": "QualifiedName"
-                }
-              }
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "TypeDefinition"
             }
           }
         ]
@@ -749,15 +1357,10 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "elements": []
           },
           {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refText": "IDWithKeword"
-              }
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "NameWithKeyword"
             }
           },
           {
@@ -827,33 +1430,6 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
     {
       "$type": "ParserRule",
       "parameters": [],
-      "name": "Type",
-      "hiddenTokens": [],
-      "alternatives": {
-        "$type": "Alternatives",
-        "elements": [
-          {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "Entity"
-            },
-            "elements": []
-          },
-          {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "ExternalType"
-            },
-            "elements": []
-          }
-        ]
-      }
-    },
-    {
-      "$type": "ParserRule",
-      "parameters": [],
       "name": "QualifiedName",
       "hiddenTokens": [],
       "type": "string",
@@ -892,47 +1468,6 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
     {
       "$type": "ParserRule",
       "parameters": [],
-      "name": "IDWithKeword",
-      "hiddenTokens": [],
-      "type": "string",
-      "alternatives": {
-        "$type": "Alternatives",
-        "elements": [
-          {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "ID"
-            },
-            "elements": []
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "[",
-                "elements": []
-              },
-              {
-                "$type": "RuleCall",
-                "arguments": [],
-                "rule": {
-                  "$refText": "Keyword"
-                }
-              },
-              {
-                "$type": "Keyword",
-                "value": "]"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "$type": "ParserRule",
-      "parameters": [],
       "name": "Keyword",
       "hiddenTokens": [],
       "type": "string",
@@ -955,7 +1490,7 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
     {
       "$type": "ParserRule",
       "parameters": [],
-      "name": "Modifiers",
+      "name": "NameWithKeyword",
       "hiddenTokens": [],
       "fragment": true,
       "alternatives": {
@@ -963,26 +1498,44 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
         "elements": [
           {
             "$type": "Assignment",
-            "feature": "isId",
-            "operator": "?=",
+            "feature": "name",
+            "operator": "=",
             "terminal": {
-              "$type": "Keyword",
-              "value": "id"
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "ID"
+              }
             },
             "elements": []
           },
           {
-            "$type": "Assignment",
-            "feature": "isIndex",
-            "operator": "?=",
-            "terminal": {
-              "$type": "Keyword",
-              "value": "index"
-            },
-            "elements": []
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": "[",
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "name",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Keyword"
+                  }
+                }
+              },
+              {
+                "$type": "Keyword",
+                "value": "]"
+              }
+            ]
           }
-        ],
-        "cardinality": "*"
+        ]
       }
     },
     {
@@ -1044,5 +1597,6 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
       }
     }
   ],
+  "isDeclared": true,
   "name": "Philyra"
 }`));

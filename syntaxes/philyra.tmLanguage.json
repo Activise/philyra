@@ -10,7 +10,7 @@
     },
     {
       "name": "keyword.control.philyra",
-      "match": "\\b(applicationConfig|dto|entity|from|id|import|index|is|package|to|type|wraps)\\b|\\B(\\[1\\.\\.n\\]|\\[m\\.\\.n\\])\\B"
+      "match": "\\b(all|applicationConfig|combined|crud|dto|entity|for|from|id|import|in|index|is|multi|out|package|port|repository|single|splitted|to|type|wraps)\\b"
     },
     {
       "name": "string.quoted.double.philyra",

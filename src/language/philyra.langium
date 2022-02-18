@@ -2,63 +2,73 @@ grammar Philyra
 
 entry Model: (applicationConfig=ApplicationConfig | imports+=Import | packages+=Package)*;
 
-Package:
-    'package' name=QualifiedName '{'
-        (imports+=Import | types+=ExternalType | entities+=Entity | dtos+=Dto)*
-    '}';
-
-Import:
-    'import' toImport=[TypeToImport:QualifiedName];
-
-TypeToImport: Entity | ExternalType | Package;
-
 ApplicationConfig:
     'applicationConfig' '{'
         properties+=ApplicationConfigProperty*
     '}';
-
 ApplicationConfigProperty:
     key=ID ':' value=(STRING | NUMBER)? ('{'
         subProperties+=ApplicationConfigProperty*
     '}')?;
 
-Entity:
-    'entity' name=IDWithKeword ('(' tableName=ID ')')? ('is' base=[Entity:QualifiedName])? '{'
-        attributes+=Attribute*
+
+Import:
+    'import' toImport=[TypeToImport:QualifiedName];
+TypeToImport: Entity | ExternalType | Dto | Package;
+Package:
+    'package' name=QualifiedName '{'
+        (repository=Repository | crud=Crud | imports+=Import | types+=ExternalType | entities+=Entity | dtos+=Dto | ports+=Port)*
     '}';
 
-Attribute:
-    Modifiers name=IDWithKeword ':' (('[' type=[Type:QualifiedName] isArray?=']') | type=[Type:QualifiedName] isArray?='[]'?) ('from' otherSide=[Attribute])?;
 
-/*
- * [1..n] = OneToMany
- * [m..n] = ManyToMany
- * [1..1] = OneToOne
- */
-RelationType returns string: '[1..n]' | '[m..n]' | '1..1';
+Type: Entity | ExternalType | Dto;
+fragment TypeDefinition: (('[' type=[Type:QualifiedName] isArray?=']') | (type=[Type:QualifiedName] isArray?='[]'?));
+
+
+Port:
+    isSplitted?='splitted'? 'port' type=PortType name=ID '{'
+        methods+=MethodDefinition*
+    '}';
+PortType returns string: 'in' | 'out';
+MethodDefinition: NameWithKeyword '(' (parameters+=MethodParameter* (',' parameters+=MethodParameter)*) ')' ':' TypeDefinition;
+MethodParameter: NameWithKeyword ':' TypeDefinition;
+
+
+Entity:
+    'entity' NameWithKeyword ('(' tableName=ID ')')? ('is' base=[Entity:QualifiedName])? ('->' inheritance=InheritanceMode)? '{'
+        (combinedIndices+=CombinedIndex | attributes+=Attribute)*
+    '}';
+InheritanceMode returns string: 'single' | 'multi';
+CombinedIndex: 'combined' 'index' attributes+=[Attribute] (',' attributes+=[Attribute])*;
+Attribute: Modifiers NameWithKeyword ':' (('[' type=[Type:QualifiedName] isArray?=']') | (type=[Type:QualifiedName] isArray?='[]'?)) ('from' otherSide=[Attribute])?;
+fragment Modifiers: (isId?='id' | isIndex?='index')*;
+
+
+Repository:
+    'repository' 'for' (forAll?='all' | entities+=[Entity] (',' entities+=[Entity])*);
+Crud:
+    'crud' 'for' (forAll?='all' | entities+=[Entity] (',' entities+=[Entity])*);
+
 
 Dto:
-    'dto' name=ID ('wraps' entity=[Entity:QualifiedName])? '{'
+    'dto' NameWithKeyword ('wraps' entity=[Entity:QualifiedName])? '{'
         properties+=DtoProperty*
     '}';
-
 DtoProperty:
-    name=IDWithKeword ':' type=[Type:QualifiedName];
+    NameWithKeyword ':' TypeDefinition;
+
 
 ExternalType:
-    'type' name=IDWithKeword '{'
+    'type' NameWithKeyword '{'
         mappings+=ExternalTypeMapping*
     '}';
 ExternalTypeMapping:
     language=STRING 'to' mapping=STRING;
 
-Type: Entity | ExternalType;
 
 QualifiedName returns string: ID ('.' ID)*;
-IDWithKeword returns string: ID | '[' Keyword ']';
 Keyword returns string: 'id' | 'index';
-
-fragment Modifiers: (isId?='id' | isIndex?='index')*;
+fragment NameWithKeyword: (name=ID | '[' name=Keyword ']');
 
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal NUMBER returns number: /[+-]?([0-9]*[.])?[0-9]+/;
