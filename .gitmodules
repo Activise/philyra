@@ -1,4 +1,5 @@
 [submodule "vendor/langium"]
 	path = vendor/langium
 	url = https://github.com/Activise/langium
+	branch = main
 	ignore = dirty
