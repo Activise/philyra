@@ -587,7 +587,10 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
       "parameters": [],
       "name": "PortType",
       "hiddenTokens": [],
-      "type": "string",
+      "type": {
+        "$type": "ReturnType",
+        "name": "string"
+      },
       "alternatives": {
         "$type": "Alternatives",
         "elements": [
@@ -861,7 +864,10 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
       "parameters": [],
       "name": "InheritanceMode",
       "hiddenTokens": [],
-      "type": "string",
+      "type": {
+        "$type": "ReturnType",
+        "name": "string"
+      },
       "alternatives": {
         "$type": "Alternatives",
         "elements": [
@@ -903,6 +909,13 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
               "$type": "CrossReference",
               "type": {
                 "$refText": "Attribute"
+              },
+              "terminal": {
+                "$type": "RuleCall",
+                "arguments": [],
+                "rule": {
+                  "$refText": "KeywordOrId"
+                }
               }
             }
           },
@@ -922,6 +935,13 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
                   "$type": "CrossReference",
                   "type": {
                     "$refText": "Attribute"
+                  },
+                  "terminal": {
+                    "$type": "RuleCall",
+                    "arguments": [],
+                    "rule": {
+                      "$refText": "KeywordOrId"
+                    }
                   }
                 }
               }
@@ -1050,6 +1070,13 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
                   "$type": "CrossReference",
                   "type": {
                     "$refText": "Attribute"
+                  },
+                  "terminal": {
+                    "$type": "RuleCall",
+                    "arguments": [],
+                    "rule": {
+                      "$refText": "KeywordOrId"
+                    }
                   }
                 }
               }
@@ -1430,9 +1457,43 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
     {
       "$type": "ParserRule",
       "parameters": [],
+      "name": "KeywordOrId",
+      "hiddenTokens": [],
+      "type": {
+        "$type": "ReturnType",
+        "name": "string"
+      },
+      "alternatives": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "Keyword"
+            },
+            "elements": []
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "ID"
+            },
+            "elements": []
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
       "name": "QualifiedName",
       "hiddenTokens": [],
-      "type": "string",
+      "type": {
+        "$type": "ReturnType",
+        "name": "string"
+      },
       "alternatives": {
         "$type": "Group",
         "elements": [
@@ -1470,7 +1531,10 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
       "parameters": [],
       "name": "Keyword",
       "hiddenTokens": [],
-      "type": "string",
+      "type": {
+        "$type": "ReturnType",
+        "name": "string"
+      },
       "alternatives": {
         "$type": "Alternatives",
         "elements": [
@@ -1550,7 +1614,10 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
     {
       "$type": "TerminalRule",
       "name": "NUMBER",
-      "type": "number",
+      "type": {
+        "$type": "ReturnType",
+        "name": "number"
+      },
       "terminal": {
         "$type": "RegexToken",
         "regex": "[+-]?([0-9]*[.])?[0-9]+",
@@ -1597,6 +1664,8 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
       }
     }
   ],
+  "interfaces": [],
+  "types": [],
   "isDeclared": true,
   "name": "Philyra"
 }`));

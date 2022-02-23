@@ -39,8 +39,8 @@ Entity:
         (combinedIndices+=CombinedIndex | attributes+=Attribute)*
     '}';
 InheritanceMode returns string: 'single' | 'multi';
-CombinedIndex: 'combined' 'index' attributes+=[Attribute] (',' attributes+=[Attribute])*;
-Attribute: Modifiers NameWithKeyword ':' (('[' type=[Type:QualifiedName] isArray?=']') | (type=[Type:QualifiedName] isArray?='[]'?)) ('from' otherSide=[Attribute])?;
+CombinedIndex: 'combined' 'index' attributes+=[Attribute:KeywordOrId] (',' attributes+=[Attribute:KeywordOrId])*;
+Attribute: Modifiers NameWithKeyword ':' (('[' type=[Type:QualifiedName] isArray?=']') | (type=[Type:QualifiedName] isArray?='[]'?)) ('from' otherSide=[Attribute:KeywordOrId])?;
 fragment Modifiers: (isId?='id' | isIndex?='index')*;
 
 
@@ -65,7 +65,7 @@ ExternalType:
 ExternalTypeMapping:
     language=STRING 'to' mapping=STRING;
 
-
+KeywordOrId returns string: Keyword | ID;
 QualifiedName returns string: ID ('.' ID)*;
 Keyword returns string: 'id' | 'index';
 fragment NameWithKeyword: (name=ID | '[' name=Keyword ']');

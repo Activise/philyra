@@ -7,6 +7,32 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { AstNode, AstReflection, Reference, isAstNode } from 'langium';
 
+export type InheritanceMode = 'multi' | 'single';
+
+export type Keyword = 'id' | 'index';
+
+export type KeywordOrId = string;
+
+export type PortType = 'in' | 'out';
+
+export type QualifiedName = string;
+
+export type Type = Dto | Entity | ExternalType;
+
+export const Type = 'Type';
+
+export function isType(item: unknown): item is Type {
+    return reflection.isInstance(item, Type);
+}
+
+export type TypeToImport = Dto | Entity | ExternalType | Package;
+
+export const TypeToImport = 'TypeToImport';
+
+export function isTypeToImport(item: unknown): item is TypeToImport {
+    return reflection.isInstance(item, TypeToImport);
+}
+
 export interface ApplicationConfig extends AstNode {
     readonly $container: Model;
     properties: Array<ApplicationConfigProperty>
@@ -70,6 +96,19 @@ export function isCrud(item: unknown): item is Crud {
     return reflection.isInstance(item, Crud);
 }
 
+export interface Dto extends AstNode {
+    readonly $container: Model | Package;
+    entity?: Reference<Entity>
+    name: Keyword | string
+    properties: Array<DtoProperty>
+}
+
+export const Dto = 'Dto';
+
+export function isDto(item: unknown): item is Dto {
+    return reflection.isInstance(item, Dto);
+}
+
 export interface DtoProperty extends AstNode {
     readonly $container: Dto;
     isArray: boolean
@@ -81,6 +120,34 @@ export const DtoProperty = 'DtoProperty';
 
 export function isDtoProperty(item: unknown): item is DtoProperty {
     return reflection.isInstance(item, DtoProperty);
+}
+
+export interface Entity extends AstNode {
+    readonly $container: Model | Package;
+    attributes: Array<Attribute>
+    base?: Reference<Entity>
+    combinedIndices: Array<CombinedIndex>
+    inheritance: InheritanceMode
+    name: Keyword | string
+    tableName: string
+}
+
+export const Entity = 'Entity';
+
+export function isEntity(item: unknown): item is Entity {
+    return reflection.isInstance(item, Entity);
+}
+
+export interface ExternalType extends AstNode {
+    readonly $container: Model | Package;
+    mappings: Array<ExternalTypeMapping>
+    name: Keyword | string
+}
+
+export const ExternalType = 'ExternalType';
+
+export function isExternalType(item: unknown): item is ExternalType {
+    return reflection.isInstance(item, ExternalType);
 }
 
 export interface ExternalTypeMapping extends AstNode {
@@ -145,6 +212,24 @@ export function isModel(item: unknown): item is Model {
     return reflection.isInstance(item, Model);
 }
 
+export interface Package extends AstNode {
+    readonly $container: Model | Package;
+    crud: Crud
+    dtos: Array<Dto>
+    entities: Array<Entity>
+    imports: Array<Import>
+    name: QualifiedName
+    ports: Array<Port>
+    repository: Repository
+    types: Array<ExternalType>
+}
+
+export const Package = 'Package';
+
+export function isPackage(item: unknown): item is Package {
+    return reflection.isInstance(item, Package);
+}
+
 export interface Port extends AstNode {
     readonly $container: Package;
     isSplitted: boolean
@@ -171,95 +256,14 @@ export function isRepository(item: unknown): item is Repository {
     return reflection.isInstance(item, Repository);
 }
 
-export interface Type extends AstNode {
-    readonly $container: Model | Package;
-    name: Keyword | string
-}
+export type PhilyraAstType = 'ApplicationConfig' | 'ApplicationConfigProperty' | 'Attribute' | 'CombinedIndex' | 'Crud' | 'Dto' | 'DtoProperty' | 'Entity' | 'ExternalType' | 'ExternalTypeMapping' | 'Import' | 'MethodDefinition' | 'MethodParameter' | 'Model' | 'Package' | 'Port' | 'Repository' | 'Type' | 'TypeToImport';
 
-export const Type = 'Type';
-
-export function isType(item: unknown): item is Type {
-    return reflection.isInstance(item, Type);
-}
-
-export interface TypeToImport extends AstNode {
-    readonly $container: Model | Package;
-}
-
-export const TypeToImport = 'TypeToImport';
-
-export function isTypeToImport(item: unknown): item is TypeToImport {
-    return reflection.isInstance(item, TypeToImport);
-}
-
-export interface Dto extends TypeToImport, Type {
-    entity?: Reference<Entity>
-    properties: Array<DtoProperty>
-}
-
-export const Dto = 'Dto';
-
-export function isDto(item: unknown): item is Dto {
-    return reflection.isInstance(item, Dto);
-}
-
-export interface Entity extends TypeToImport, Type {
-    attributes: Array<Attribute>
-    base?: Reference<Entity>
-    combinedIndices: Array<CombinedIndex>
-    inheritance: InheritanceMode
-    tableName: string
-}
-
-export const Entity = 'Entity';
-
-export function isEntity(item: unknown): item is Entity {
-    return reflection.isInstance(item, Entity);
-}
-
-export interface ExternalType extends TypeToImport, Type {
-    mappings: Array<ExternalTypeMapping>
-}
-
-export const ExternalType = 'ExternalType';
-
-export function isExternalType(item: unknown): item is ExternalType {
-    return reflection.isInstance(item, ExternalType);
-}
-
-export interface Package extends TypeToImport {
-    crud: Crud
-    dtos: Array<Dto>
-    entities: Array<Entity>
-    imports: Array<Import>
-    name: QualifiedName
-    ports: Array<Port>
-    repository: Repository
-    types: Array<ExternalType>
-}
-
-export const Package = 'Package';
-
-export function isPackage(item: unknown): item is Package {
-    return reflection.isInstance(item, Package);
-}
-
-export type PortType = 'in' | 'out'
-
-export type InheritanceMode = 'single' | 'multi'
-
-export type QualifiedName = string
-
-export type Keyword = 'id' | 'index'
-
-export type PhilyraAstType = 'ApplicationConfig' | 'ApplicationConfigProperty' | 'Attribute' | 'CombinedIndex' | 'Crud' | 'DtoProperty' | 'ExternalTypeMapping' | 'Import' | 'MethodDefinition' | 'MethodParameter' | 'Model' | 'Port' | 'Repository' | 'Type' | 'TypeToImport' | 'Dto' | 'Entity' | 'ExternalType' | 'Package';
-
-export type PhilyraAstReference = 'Attribute:otherSide' | 'Attribute:type' | 'CombinedIndex:attributes' | 'Crud:entities' | 'DtoProperty:type' | 'Import:toImport' | 'MethodDefinition:type' | 'MethodParameter:type' | 'Repository:entities' | 'Dto:entity' | 'Entity:base';
+export type PhilyraAstReference = 'Attribute:otherSide' | 'Attribute:type' | 'CombinedIndex:attributes' | 'Crud:entities' | 'Dto:entity' | 'DtoProperty:type' | 'Entity:base' | 'Import:toImport' | 'MethodDefinition:type' | 'MethodParameter:type' | 'Repository:entities';
 
 export class PhilyraAstReflection implements AstReflection {
 
     getAllTypes(): string[] {
-        return ['ApplicationConfig', 'ApplicationConfigProperty', 'Attribute', 'CombinedIndex', 'Crud', 'DtoProperty', 'ExternalTypeMapping', 'Import', 'MethodDefinition', 'MethodParameter', 'Model', 'Port', 'Repository', 'Type', 'TypeToImport', 'Dto', 'Entity', 'ExternalType', 'Package'];
+        return ['ApplicationConfig', 'ApplicationConfigProperty', 'Attribute', 'CombinedIndex', 'Crud', 'Dto', 'DtoProperty', 'Entity', 'ExternalType', 'ExternalTypeMapping', 'Import', 'MethodDefinition', 'MethodParameter', 'Model', 'Package', 'Port', 'Repository', 'Type', 'TypeToImport'];
     }
 
     isInstance(node: unknown, type: string): boolean {
@@ -299,8 +303,14 @@ export class PhilyraAstReflection implements AstReflection {
             case 'Crud:entities': {
                 return Entity;
             }
+            case 'Dto:entity': {
+                return Entity;
+            }
             case 'DtoProperty:type': {
                 return Type;
+            }
+            case 'Entity:base': {
+                return Entity;
             }
             case 'Import:toImport': {
                 return TypeToImport;
@@ -312,12 +322,6 @@ export class PhilyraAstReflection implements AstReflection {
                 return Type;
             }
             case 'Repository:entities': {
-                return Entity;
-            }
-            case 'Dto:entity': {
-                return Entity;
-            }
-            case 'Entity:base': {
                 return Entity;
             }
             default: {
