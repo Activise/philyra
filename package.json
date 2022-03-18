@@ -44,9 +44,10 @@
     },
     "main": "./out/extension.js",
     "scripts": {
-        "vscode:prepublish": "npm run build && npm run lint",
-        "build": "tsc -b tsconfig.json",
-        "watch": "tsc -b tsconfig.json --watch",
+        "vscode:prepublish": "npm run clean && tsc --noEmit && npm run lint && node esbuild.js --minify",
+        "clean": "rimraf out",
+        "build": "node esbuild.js",
+        "watch": "node esbuild.js --watch",
         "lint": "eslint src --ext ts",
         "langium:generate": "langium generate",
         "langium:watch": "langium generate --watch"
@@ -54,7 +55,8 @@
     "dependencies": {
         "colors": "^1.4.0",
         "commander": "^9.0.0",
-        "handlebars": "^4.7.7",
+        "esbuild": "^0.14.26",
+        "eta": "^1.12.3",
         "langium": "file:vendor/langium/packages/langium",
         "vscode-languageclient": "^7.0.0",
         "vscode-languageserver": "^7.0.0",
