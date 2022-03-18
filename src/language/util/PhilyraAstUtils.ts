@@ -5,7 +5,7 @@ export function getMembersToExport(container: Model | Package): MemberToExport[]
   if (isModel(container)) {
     return container.packages.flatMap(p => getMembersToExport(p));
   } else if (isPackage(container)) {
-    return [...container.entities, ...container.dtos, ...container.types];
+    return [...container.entities, ...container.embeddables, ...container.dtos, ...container.types];
   }
 
   return [];

@@ -65,7 +65,7 @@ const attributeScopeFilter = (node: AstNode, description?: AstNodeDescription): 
   if (isAttribute(node) && isAttribute(description?.node)) {
     let entity = node.$container;
     
-    return entity == description?.node.type.ref; 
+    return entity == description?.node.typeInfo.type.ref; 
   }
 
   return true;

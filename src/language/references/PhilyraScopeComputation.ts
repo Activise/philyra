@@ -63,7 +63,7 @@ export class PhilyraScopeComputation extends DefaultScopeComputation {
       }
 
       for (let attribute of member.attributes) {
-        if (attribute.type == undefined) {
+        if (attribute.typeInfo.type == undefined) {
           continue;
         }
 
@@ -74,7 +74,7 @@ export class PhilyraScopeComputation extends DefaultScopeComputation {
   }
 
   async computeAttributeOtherSideScope(attribute: Attribute, scopes: PrecomputedScopes, document: LangiumDocument): Promise<void> {
-    let attributeType = attribute.type.ref;
+    let attributeType = attribute.typeInfo.type.ref;
     if (attributeType && isEntity(attributeType)) {
       for (let targetAttribute of attributeType.attributes) {
         this.addScopeToContainer(scopes, attribute, targetAttribute, document);

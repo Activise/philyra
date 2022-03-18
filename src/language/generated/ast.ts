@@ -17,7 +17,7 @@ export type PortType = 'in' | 'out';
 
 export type QualifiedName = string;
 
-export type Type = Dto | Entity | ExternalType;
+export type Type = Dto | Embeddable | Entity | ExternalType;
 
 export const Type = 'Type';
 
@@ -25,7 +25,7 @@ export function isType(item: unknown): item is Type {
     return reflection.isInstance(item, Type);
 }
 
-export type TypeToImport = Dto | Entity | ExternalType | Package;
+export type TypeToImport = Dto | Embeddable | Entity | ExternalType | Package;
 
 export const TypeToImport = 'TypeToImport';
 
@@ -58,13 +58,12 @@ export function isApplicationConfigProperty(item: unknown): item is ApplicationC
 }
 
 export interface Attribute extends AstNode {
-    readonly $container: Entity;
-    isArray: boolean
+    readonly $container: Embeddable | Entity;
     isId: boolean
     isIndex: boolean
     name: Keyword | string
     otherSide?: Reference<Attribute>
-    type: Reference<Type>
+    typeInfo: TypeDefinition
 }
 
 export const Attribute = 'Attribute';
@@ -111,15 +110,26 @@ export function isDto(item: unknown): item is Dto {
 
 export interface DtoProperty extends AstNode {
     readonly $container: Dto;
-    isArray: boolean
     name: Keyword | string
-    type: Reference<Type>
+    typeInfo: TypeDefinition
 }
 
 export const DtoProperty = 'DtoProperty';
 
 export function isDtoProperty(item: unknown): item is DtoProperty {
     return reflection.isInstance(item, DtoProperty);
+}
+
+export interface Embeddable extends AstNode {
+    readonly $container: Model | Package;
+    attributes: Array<Attribute>
+    name: Keyword | string
+}
+
+export const Embeddable = 'Embeddable';
+
+export function isEmbeddable(item: unknown): item is Embeddable {
+    return reflection.isInstance(item, Embeddable);
 }
 
 export interface Entity extends AstNode {
@@ -175,10 +185,9 @@ export function isImport(item: unknown): item is Import {
 
 export interface MethodDefinition extends AstNode {
     readonly $container: Port;
-    isArray: boolean
     name: Keyword | string
     parameters: Array<MethodParameter>
-    type: Reference<Type>
+    returnTypeInfo: TypeDefinition
 }
 
 export const MethodDefinition = 'MethodDefinition';
@@ -189,9 +198,8 @@ export function isMethodDefinition(item: unknown): item is MethodDefinition {
 
 export interface MethodParameter extends AstNode {
     readonly $container: MethodDefinition;
-    isArray: boolean
     name: Keyword | string
-    type: Reference<Type>
+    typeInfo: TypeDefinition
 }
 
 export const MethodParameter = 'MethodParameter';
@@ -216,6 +224,7 @@ export interface Package extends AstNode {
     readonly $container: Model | Package;
     crud: Crud
     dtos: Array<Dto>
+    embeddables: Array<Embeddable>
     entities: Array<Entity>
     imports: Array<Import>
     name: QualifiedName
@@ -256,14 +265,26 @@ export function isRepository(item: unknown): item is Repository {
     return reflection.isInstance(item, Repository);
 }
 
-export type PhilyraAstType = 'ApplicationConfig' | 'ApplicationConfigProperty' | 'Attribute' | 'CombinedIndex' | 'Crud' | 'Dto' | 'DtoProperty' | 'Entity' | 'ExternalType' | 'ExternalTypeMapping' | 'Import' | 'MethodDefinition' | 'MethodParameter' | 'Model' | 'Package' | 'Port' | 'Repository' | 'Type' | 'TypeToImport';
+export interface TypeDefinition extends AstNode {
+    readonly $container: Attribute | DtoProperty | MethodDefinition | MethodParameter;
+    isArray: boolean
+    type: Reference<Type>
+}
 
-export type PhilyraAstReference = 'Attribute:otherSide' | 'Attribute:type' | 'CombinedIndex:attributes' | 'Crud:entities' | 'Dto:entity' | 'DtoProperty:type' | 'Entity:base' | 'Import:toImport' | 'MethodDefinition:type' | 'MethodParameter:type' | 'Repository:entities';
+export const TypeDefinition = 'TypeDefinition';
+
+export function isTypeDefinition(item: unknown): item is TypeDefinition {
+    return reflection.isInstance(item, TypeDefinition);
+}
+
+export type PhilyraAstType = 'ApplicationConfig' | 'ApplicationConfigProperty' | 'Attribute' | 'CombinedIndex' | 'Crud' | 'Dto' | 'DtoProperty' | 'Embeddable' | 'Entity' | 'ExternalType' | 'ExternalTypeMapping' | 'Import' | 'MethodDefinition' | 'MethodParameter' | 'Model' | 'Package' | 'Port' | 'Repository' | 'Type' | 'TypeDefinition' | 'TypeToImport';
+
+export type PhilyraAstReference = 'Attribute:otherSide' | 'CombinedIndex:attributes' | 'Crud:entities' | 'Dto:entity' | 'Entity:base' | 'Import:toImport' | 'Repository:entities' | 'TypeDefinition:type';
 
 export class PhilyraAstReflection implements AstReflection {
 
     getAllTypes(): string[] {
-        return ['ApplicationConfig', 'ApplicationConfigProperty', 'Attribute', 'CombinedIndex', 'Crud', 'Dto', 'DtoProperty', 'Entity', 'ExternalType', 'ExternalTypeMapping', 'Import', 'MethodDefinition', 'MethodParameter', 'Model', 'Package', 'Port', 'Repository', 'Type', 'TypeToImport'];
+        return ['ApplicationConfig', 'ApplicationConfigProperty', 'Attribute', 'CombinedIndex', 'Crud', 'Dto', 'DtoProperty', 'Embeddable', 'Entity', 'ExternalType', 'ExternalTypeMapping', 'Import', 'MethodDefinition', 'MethodParameter', 'Model', 'Package', 'Port', 'Repository', 'Type', 'TypeDefinition', 'TypeToImport'];
     }
 
     isInstance(node: unknown, type: string): boolean {
@@ -276,6 +297,7 @@ export class PhilyraAstReflection implements AstReflection {
         }
         switch (subtype) {
             case Dto:
+            case Embeddable:
             case Entity:
             case ExternalType: {
                 return this.isSubtype(TypeToImport, supertype) || this.isSubtype(Type, supertype);
@@ -294,9 +316,6 @@ export class PhilyraAstReflection implements AstReflection {
             case 'Attribute:otherSide': {
                 return Attribute;
             }
-            case 'Attribute:type': {
-                return Type;
-            }
             case 'CombinedIndex:attributes': {
                 return Attribute;
             }
@@ -306,23 +325,17 @@ export class PhilyraAstReflection implements AstReflection {
             case 'Dto:entity': {
                 return Entity;
             }
-            case 'DtoProperty:type': {
-                return Type;
-            }
             case 'Entity:base': {
                 return Entity;
             }
             case 'Import:toImport': {
                 return TypeToImport;
             }
-            case 'MethodDefinition:type': {
-                return Type;
-            }
-            case 'MethodParameter:type': {
-                return Type;
-            }
             case 'Repository:entities': {
                 return Entity;
+            }
+            case 'TypeDefinition:type': {
+                return Type;
             }
             default: {
                 throw new Error(`${referenceId} is not a valid reference id.`);

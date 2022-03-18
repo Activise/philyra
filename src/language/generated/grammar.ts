@@ -237,6 +237,14 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "$type": "RuleCall",
             "arguments": [],
             "rule": {
+              "$refText": "Embeddable"
+            },
+            "elements": []
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
               "$refText": "ExternalType"
             },
             "elements": []
@@ -359,6 +367,19 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
               },
               {
                 "$type": "Assignment",
+                "feature": "embeddables",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Embeddable"
+                  }
+                },
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
                 "feature": "dtos",
                 "operator": "+=",
                 "terminal": {
@@ -413,6 +434,14 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "$type": "RuleCall",
             "arguments": [],
             "rule": {
+              "$refText": "Embeddable"
+            },
+            "elements": []
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
               "$refText": "ExternalType"
             },
             "elements": []
@@ -433,7 +462,6 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
       "parameters": [],
       "name": "TypeDefinition",
       "hiddenTokens": [],
-      "fragment": true,
       "alternatives": {
         "$type": "Alternatives",
         "elements": [
@@ -678,10 +706,15 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "value": ":"
           },
           {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "TypeDefinition"
+            "$type": "Assignment",
+            "feature": "returnTypeInfo",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "TypeDefinition"
+              }
             }
           }
         ]
@@ -708,10 +741,15 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "value": ":"
           },
           {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "TypeDefinition"
+            "$type": "Assignment",
+            "feature": "typeInfo",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "TypeDefinition"
+              }
             }
           }
         ]
@@ -862,6 +900,51 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
     {
       "$type": "ParserRule",
       "parameters": [],
+      "name": "Embeddable",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "embeddable",
+            "elements": []
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "NameWithKeyword"
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "{"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "attributes",
+            "operator": "+=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "Attribute"
+              }
+            },
+            "elements": [],
+            "cardinality": "*"
+          },
+          {
+            "$type": "Keyword",
+            "value": "}"
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
       "name": "InheritanceMode",
       "hiddenTokens": [],
       "type": {
@@ -979,80 +1062,16 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "value": ":"
           },
           {
-            "$type": "Alternatives",
-            "elements": [
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "Keyword",
-                    "value": "[",
-                    "elements": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "type",
-                    "operator": "=",
-                    "terminal": {
-                      "$type": "CrossReference",
-                      "type": {
-                        "$refText": "Type"
-                      },
-                      "terminal": {
-                        "$type": "RuleCall",
-                        "arguments": [],
-                        "rule": {
-                          "$refText": "QualifiedName"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "isArray",
-                    "operator": "?=",
-                    "terminal": {
-                      "$type": "Keyword",
-                      "value": "]"
-                    }
-                  }
-                ]
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "Assignment",
-                    "feature": "type",
-                    "operator": "=",
-                    "terminal": {
-                      "$type": "CrossReference",
-                      "type": {
-                        "$refText": "Type"
-                      },
-                      "terminal": {
-                        "$type": "RuleCall",
-                        "arguments": [],
-                        "rule": {
-                          "$refText": "QualifiedName"
-                        }
-                      }
-                    },
-                    "elements": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "isArray",
-                    "operator": "?=",
-                    "terminal": {
-                      "$type": "Keyword",
-                      "value": "[]"
-                    },
-                    "cardinality": "?"
-                  }
-                ]
+            "$type": "Assignment",
+            "feature": "typeInfo",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "TypeDefinition"
               }
-            ]
+            }
           },
           {
             "$type": "Group",
@@ -1361,10 +1380,15 @@ export const PhilyraGrammar = (): Grammar => loadedPhilyraGrammar ||(loadedPhily
             "value": ":"
           },
           {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "TypeDefinition"
+            "$type": "Assignment",
+            "feature": "typeInfo",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "TypeDefinition"
+              }
             }
           }
         ]

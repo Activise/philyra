@@ -14,15 +14,15 @@ ApplicationConfigProperty:
 
 Import:
     'import' toImport=[TypeToImport:QualifiedName];
-TypeToImport: Entity | ExternalType | Dto | Package;
+TypeToImport: Entity | Embeddable | ExternalType | Dto | Package;
 Package:
     'package' name=QualifiedName '{'
-        (repository=Repository | crud=Crud | imports+=Import | types+=ExternalType | entities+=Entity | dtos+=Dto | ports+=Port)*
+        (repository=Repository | crud=Crud | imports+=Import | types+=ExternalType | entities+=Entity | embeddables+=Embeddable | dtos+=Dto | ports+=Port)*
     '}';
 
 
-Type: Entity | ExternalType | Dto;
-fragment TypeDefinition: (('[' type=[Type:QualifiedName] isArray?=']') | (type=[Type:QualifiedName] isArray?='[]'?));
+Type: Entity | Embeddable | ExternalType | Dto;
+TypeDefinition: (('[' type=[Type:QualifiedName] isArray?=']') | (type=[Type:QualifiedName] isArray?='[]'?));
 
 
 Port:
@@ -30,17 +30,21 @@ Port:
         methods+=MethodDefinition*
     '}';
 PortType returns string: 'in' | 'out';
-MethodDefinition: NameWithKeyword '(' (parameters+=MethodParameter* (',' parameters+=MethodParameter)*) ')' ':' TypeDefinition;
-MethodParameter: NameWithKeyword ':' TypeDefinition;
+MethodDefinition: NameWithKeyword '(' (parameters+=MethodParameter* (',' parameters+=MethodParameter)*) ')' ':' returnTypeInfo=TypeDefinition;
+MethodParameter: NameWithKeyword ':' typeInfo=TypeDefinition;
 
 
 Entity:
     'entity' NameWithKeyword ('(' tableName=ID ')')? ('is' base=[Entity:QualifiedName])? ('->' inheritance=InheritanceMode)? '{'
         (combinedIndices+=CombinedIndex | attributes+=Attribute)*
     '}';
+Embeddable:
+    'embeddable' NameWithKeyword '{'
+        (attributes+=Attribute)*
+    '}';
 InheritanceMode returns string: 'single' | 'multi';
 CombinedIndex: 'combined' 'index' attributes+=[Attribute:KeywordOrId] (',' attributes+=[Attribute:KeywordOrId])*;
-Attribute: Modifiers NameWithKeyword ':' (('[' type=[Type:QualifiedName] isArray?=']') | (type=[Type:QualifiedName] isArray?='[]'?)) ('from' otherSide=[Attribute:KeywordOrId])?;
+Attribute: Modifiers NameWithKeyword ':' typeInfo=TypeDefinition ('from' otherSide=[Attribute:KeywordOrId])?;
 fragment Modifiers: (isId?='id' | isIndex?='index')*;
 
 
@@ -55,7 +59,7 @@ Dto:
         properties+=DtoProperty*
     '}';
 DtoProperty:
-    NameWithKeyword ':' TypeDefinition;
+    NameWithKeyword ':' typeInfo=TypeDefinition;
 
 
 ExternalType:
