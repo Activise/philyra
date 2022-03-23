@@ -28,7 +28,7 @@ function findCstNodes(node: CstNode, predicate: (value: CstNode) => boolean): St
 
 export class PhilyraValidator {
   readonly nameProvider: PhilyraNameProvider;
-  
+
   constructor(services: PhilyraServices) {
     this.nameProvider = services.references.NameProvider as PhilyraNameProvider;
   }
@@ -57,7 +57,7 @@ export class PhilyraValidator {
   checkForDuplicateTypeNames(type: Type, accept: ValidationAcceptor): void {
     let precomputedScopes = getDocument(type).precomputedScopes;
     let descriptions: AstNodeDescription[] = [];
-    
+
     let container = type.$container;
     descriptions.push(...precomputedScopes?.get(container) || []);
     if (isPackage(container)) {
@@ -84,7 +84,7 @@ export class PhilyraValidator {
   }
 
   validateAttribute(attribute: Attribute, accept: ValidationAcceptor): void {
-    let type = attribute.type.ref;
+    let type = attribute.typeInfo.type.ref;
     let isEntityOrDto = isEntity(type) || isDto(type);
     if (attribute.isIndex && isEntityOrDto) {
       accept('error', "Can't index DTOs or Entities.", { node: attribute });
@@ -94,7 +94,7 @@ export class PhilyraValidator {
       accept('error', "Can't have DTOs or Entities as id.", { node: attribute });
     }
 
-    if (attribute.isId && attribute.isArray) {
+    if (attribute.isId && attribute.typeInfo.isArray) {
       accept('error', "The id can't be an array", { node: attribute });
     }
   }
