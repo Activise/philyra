@@ -8,13 +8,13 @@ export class FilteredScope implements Scope {
   readonly node: AstNode;
   readonly filter?: ScopeFilter;
 
-  constructor(parentScope: Scope, node: AstNode, filter: ScopeFilter | undefined, ignoreGlobalScope: boolean = false) {
+  constructor(parentScope: Scope, node: AstNode, filter?: ScopeFilter, onlyLocalScope: boolean = false) {
     this.parentScope = parentScope;
     this.node = node;
     this.filter = filter;
 
-    if (ignoreGlobalScope) {
-      (this.parentScope as any)["outerScope"] = undefined;
+    if (onlyLocalScope) {
+      (this.parentScope as any).outerScope = undefined;
     }
   }
 
@@ -59,7 +59,7 @@ export class PhilyraScopeProvider extends DefaultScopeProvider {
  * 
  * @param node The node for the scope
  * @param description The node available for reference
- * @returns true if the referenced nodes type equals the node-scopes type. False if otherwise
+ * @returns true if the attribute type equals the referenced type. False if otherwise
  */
 const attributeScopeFilter = (node: AstNode, description?: AstNodeDescription): boolean => {
   if (isAttribute(node) && isAttribute(description?.node)) {
